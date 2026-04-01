@@ -41,29 +41,64 @@ A highly-polished, secure, and production-ready backend for a finance dashboard 
 1. Install dependencies: `npm install`
 2. Initialize database: `npx prisma migrate dev`
 3. Generate Prisma client: `npx prisma generate`
-4. Run in development: `npm run dev` (Starts on Port 4000)
+4. Run in development: `npm run dev` 
 5. Run tests: `npm test`
 
-## Key API Endpoints
+## 🚀 Key API Endpoints (Localhost)
 
-### Auth
-- `POST /api/auth/signup`: Create a new user (Viewer default).
-- `POST /api/auth/login`: Authenticate and receive a JWT.
+For local development, use the base URL: `http://local-url/api`
 
-### User Management
-- `GET /api/users/profile`: Access current user profile (All roles).
-- `GET /api/users`: List all users (Admin only).
-- `PATCH /api/users/:id`: Update user role/status (Admin only).
-- `DELETE /api/users/:id`: Soft delete a user (Admin only).
+### 1. 🔐 Authentication (Public)
+The following routes are used to manage user access.
 
-### Financial Records
-- `GET /api/records`: Integrated search, filter, and pagination (Analyst/Admin). 
-    - *Params*: `page`, `limit`, `search`, `type`, `category`, `startDate`, `endDate`.
-- `POST /api/records`: Create a new transaction (Admin only).
-- `DELETE /api/records/:id`: Soft delete a record (Admin only).
+| Method | Endpoint | Full Local URL | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/auth/signup` | `http://local-url/api/auth/signup` | Create a new user account |
+| `POST` | `/auth/login` | `http://local-url/api/auth/login` | Login to receive a JWT access token |
 
-### Dashboard
-- `GET /api/dashboard/summary`: Aggregate finance trends and log (All roles).
+### 2. 👤 User Management (Protected)
+Requires a valid `ADMIN` token for most operations.
+
+| Method | Endpoint | Full Local URL | Role | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/users/profile` | `http://local-url/api/users/profile` | `ANY` | Get your own profile details |
+| `GET` | `/users` | `http://local-url/api/users` | `ADMIN` | List all system users |
+| `GET` | `/users/:id` | `http://local-url/api/users/:id` | `ADMIN` | Get specific user by ID |
+| `PATCH` | `/users/:id` | `http://local-url/api/users/:id` | `ADMIN` | Update user role/status |
+| `DELETE` | `/users/:id` | `http://local-url/api/users/:id` | `ADMIN` | Soft delete/disable a user |
+
+### 3. 📊 Financial Records (Protected)
+Manage transactions and perform advanced searches.
+
+| Method | Endpoint | Full Local URL | Role | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/records` | `http://local-url/api/records` | `ANALYST+` | Search, filter, and list records |
+| `GET` | `/records/:id` | `http://local-url/api/records/:id` | `ANALYST+` | View record details |
+| `POST` | `/records` | `http://local-url/api/records` | `ADMIN` | Create a new transaction |
+| `PATCH` | `/records/:id` | `http://local-url/api/records/:id` | `ADMIN` | Update a record |
+| `DELETE` | `/records/:id` | `http://local-url/api/records/:id` | `ADMIN` | Soft delete a record |
+
+### 4. 📈 Dashboard Analytics (Protected)
+Aggregated data for charts and summaries.
+
+| Method | Endpoint | Full Local URL | Role | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/dashboard/summary` | `http://local-url/api/dashboard/summary` | `ANY` | Finance trends and activity logs |
+
+---
+
+## 🛠️ Testing with Postman
+
+Since most endpoints are protected, follow these steps to test them locally:
+
+1.  **Signup/Login**: Use `POST /api/auth/login` with your credentials to receive a JSON response containing a `"token"`.
+2.  **Authorize**: Copy the token string (without quotes).
+3.  **Set Headers**: In Postman, go to the **Authorization** tab of any protected request.
+    - Set **Type** to `Bearer Token`.
+    - Paste your token into the **Token** field.
+4.  **Send**: You are now authorized! The API will return data based on your user role.
+
+---
 
 ## Access Matrix
 | Feature | Viewer | Analyst | Admin |
