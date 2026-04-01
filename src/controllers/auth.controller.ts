@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { authService, loginSchema, signupSchema } from '../services/auth.service';
+import { authService, loginSchema, signupSchema } from '../services/auth.service.js';
 
 export const authController = {
     async signup(req: Request, res: Response, next: NextFunction) {

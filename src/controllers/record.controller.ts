@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import { recordService, recordSchema, updateRecordSchema, querySchema } from '../services/record.service';
-import { AuthRequest } from '../middlewares/auth.middleware';
+import { recordService, recordSchema, updateRecordSchema, querySchema } from '../services/record.service.js';
+import { AuthRequest } from '../middlewares/auth.middleware.js';
 
 export const recordController = {
     async createRecord(req: AuthRequest, res: Response, next: NextFunction) {

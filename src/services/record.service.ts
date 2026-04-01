@@ -1,4 +1,4 @@
-import prisma from '../utils/prisma';
+import prisma from '../utils/prisma.js';
 import { z } from 'zod';
 
 export const recordSchema = z.object({

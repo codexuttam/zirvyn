@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import { userService, updateUserSchema } from '../services/user.service';
-import { AuthRequest } from '../middlewares/auth.middleware';
+import { userService, updateUserSchema } from '../services/user.service.js';
+import { AuthRequest } from '../middlewares/auth.middleware.js';
 
 export const userController = {
     async getAllUsers(req: AuthRequest, res: Response, next: NextFunction) {
