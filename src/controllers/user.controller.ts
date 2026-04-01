@@ -1,5 +1,5 @@
 import type { Response, NextFunction } from 'express';
-import { userService, updateUserSchema } from '../services/user.service.js';
+import { userService } from '../services/user.service.js';
 import type { AuthRequest } from '../middlewares/auth.middleware.js';
 
 export const userController = {
@@ -40,8 +40,7 @@ export const userController = {
             const { id } = req.params;
             if (!id) throw { status: 400, message: 'ID required' };
 
-            const data = updateUserSchema.parse(req.body);
-            const user = await userService.updateUser(id as string, data);
+            const user = await userService.updateUser(id as string, req.body);
             res.status(200).json(user);
         } catch (error) {
             next(error);

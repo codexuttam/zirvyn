@@ -54,17 +54,29 @@ export const dashboardService = {
         });
 
         const monthlyTrends: Record<string, { income: number, expense: number }> = {};
+
+        // Pre-fill last 6 months
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            const month = d.toISOString().slice(0, 7);
+            monthlyTrends[month] = { income: 0, expense: 0 };
+        }
+
         trendRecords.forEach((r: { date: Date, type: string, amount: number }) => {
             const month = r.date.toISOString().slice(0, 7); // YYYY-MM
-            if (!monthlyTrends[month]) monthlyTrends[month] = { income: 0, expense: 0 };
-            if (r.type === 'INCOME') monthlyTrends[month].income += r.amount;
-            else monthlyTrends[month].expense += r.amount;
+            if (monthlyTrends[month]) {
+                if (r.type === 'INCOME') monthlyTrends[month].income += r.amount;
+                else monthlyTrends[month].expense += r.amount;
+            }
         });
 
         return {
             summary,
             recentActivity,
-            monthlyTrends
+            monthlyTrends: Object.entries(monthlyTrends)
+                .map(([month, data]) => ({ month, ...data }))
+                .sort((a, b) => a.month.localeCompare(b.month))
         };
     },
 };

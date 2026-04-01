@@ -1,5 +1,5 @@
 import type { Response, NextFunction } from 'express';
-import { recordService, recordSchema, updateRecordSchema, querySchema } from '../services/record.service.js';
+import { recordService } from '../services/record.service.js';
 import type { AuthRequest } from '../middlewares/auth.middleware.js';
 
 export const recordController = {
@@ -8,8 +8,7 @@ export const recordController = {
             const userId = req.user?.id;
             if (!userId) throw { status: 401, message: 'Unauthorized' };
 
-            const data = recordSchema.parse(req.body);
-            const record = await recordService.createRecord(userId, data);
+            const record = await recordService.createRecord(userId, req.body);
             res.status(201).json(record);
         } catch (error) {
             next(error);
@@ -22,8 +21,7 @@ export const recordController = {
             const role = req.user?.role;
             if (!userId || !role) throw { status: 401, message: 'Unauthorized' };
 
-            const query = querySchema.parse(req.query);
-            const records = await recordService.getAllRecords(userId, role, query);
+            const records = await recordService.getAllRecords(userId, role, req.query as any);
             res.status(200).json(records);
         } catch (error) {
             next(error);
@@ -53,8 +51,7 @@ export const recordController = {
             if (!userId || !role) throw { status: 401, message: 'Unauthorized' };
             if (!id) throw { status: 400, message: 'ID required' };
 
-            const data = updateRecordSchema.parse(req.body);
-            const record = await recordService.updateRecord(id as string, userId, role, data);
+            const record = await recordService.updateRecord(id as string, userId, role, req.body);
             res.status(200).json(record);
         } catch (error) {
             next(error);

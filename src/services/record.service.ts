@@ -19,8 +19,10 @@ export const querySchema = z.object({
     startDate: z.string().optional(),
     endDate: z.string().optional(),
     search: z.string().optional(),
-    page: z.string().transform(Number).default(1),
-    limit: z.string().transform(Number).default(10),
+    page: z.preprocess((v) => v || '1', z.string().transform(Number)).default(1),
+    limit: z.preprocess((v) => v || '10', z.string().transform(Number)).default(10),
+    sortBy: z.enum(['date', 'amount', 'category']).default('date'),
+    order: z.enum(['asc', 'desc']).default('desc'),
 });
 
 export const recordService = {
@@ -62,7 +64,7 @@ export const recordService = {
         const [records, total] = await Promise.all([
             prisma.financialRecord.findMany({
                 where,
-                orderBy: { date: 'desc' },
+                orderBy: { [query.sortBy]: query.order },
                 include: { user: { select: { name: true, email: true } } },
                 skip,
                 take: query.limit,
