@@ -4,6 +4,8 @@ import routes from './routes/index.js';
 import { errorHandler } from './middlewares/error.handler.js';
 
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './utils/swagger.js';
 
 const app = express();
 
@@ -18,6 +20,10 @@ const limiter = rateLimit({
 app.use(cors());
 app.use(express.json());
 app.use('/api', limiter);
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Main Router
 app.use('/api', routes);

@@ -44,7 +44,9 @@ A highly-polished, secure, and production-ready backend for a finance dashboard 
 4. Run in development: `npm run dev` 
 5. Run tests: `npm test`
 
-## 🚀 Key API Endpoints (Localhost)
+### 📚 Live API Documentation
+The API is fully documented using Swagger/OpenAPI. You can access the interactive documentation UI locally at:
+- **Swagger UI**: `http://local-url/api-docs`
 
 For local development, use the base URL: `http://local-url/api`
 
