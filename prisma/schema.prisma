@@ -20,6 +20,7 @@ model User {
   records   FinancialRecord[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model FinancialRecord {
@@ -33,4 +34,5 @@ model FinancialRecord {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }

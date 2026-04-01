@@ -6,6 +6,9 @@ import { roleMiddleware } from '../middlewares/role.middleware.js';
 const router = Router();
 
 router.use(authMiddleware);
+
+router.get('/profile', userController.getProfile);
+
 router.use(roleMiddleware('ADMIN'));
 
 router.get('/', userController.getAllUsers);

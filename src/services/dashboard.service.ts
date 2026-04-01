@@ -2,7 +2,7 @@ import prisma from '../utils/prisma.js';
 
 export const dashboardService = {
     async getSummary(userId: string, role: string) {
-        const where: any = {};
+        const where: any = { deletedAt: null };
         if (role !== 'ADMIN') {
             where.userId = userId;
         }

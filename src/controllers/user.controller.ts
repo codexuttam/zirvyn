@@ -1,8 +1,20 @@
-import { Response, NextFunction } from 'express';
+import type { Response, NextFunction } from 'express';
 import { userService, updateUserSchema } from '../services/user.service.js';
-import { AuthRequest } from '../middlewares/auth.middleware.js';
+import type { AuthRequest } from '../middlewares/auth.middleware.js';
 
 export const userController = {
+    async getProfile(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) throw { status: 401, message: 'Unauthorized' };
+
+            const user = await userService.getUserById(userId);
+            res.status(200).json(user);
+        } catch (error) {
+            next(error);
+        }
+    },
+
     async getAllUsers(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const users = await userService.getAllUsers();
@@ -27,6 +39,7 @@ export const userController = {
         try {
             const { id } = req.params;
             if (!id) throw { status: 400, message: 'ID required' };
+
             const data = updateUserSchema.parse(req.body);
             const user = await userService.updateUser(id as string, data);
             res.status(200).json(user);

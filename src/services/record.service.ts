@@ -18,6 +18,9 @@ export const querySchema = z.object({
     category: z.string().optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional(),
+    search: z.string().optional(),
+    page: z.string().transform(Number).default(1),
+    limit: z.string().transform(Number).default(10),
 });
 
 export const recordService = {
@@ -32,11 +35,8 @@ export const recordService = {
     },
 
     async getAllRecords(userId: string, role: string, query: z.infer<typeof querySchema>) {
-        const where: any = {};
+        const where: any = { deletedAt: null };
 
-        // Only allow Admin/Analyst to view all if requested, or filter by userId
-        // Actually, for this system, we'll assume Viewer/Analyst/Admin sees their own or all?
-        // User role check is handled by controller usually, but logic here:
         if (role !== 'ADMIN') {
             where.userId = userId;
         }
@@ -50,16 +50,40 @@ export const recordService = {
             };
         }
 
-        return prisma.financialRecord.findMany({
-            where,
-            orderBy: { date: 'desc' },
-            include: { user: { select: { name: true, email: true } } },
-        });
+        if (query.search) {
+            where.OR = [
+                { category: { contains: query.search } },
+                { description: { contains: query.search } },
+            ];
+        }
+
+        const skip = (query.page - 1) * query.limit;
+
+        const [records, total] = await Promise.all([
+            prisma.financialRecord.findMany({
+                where,
+                orderBy: { date: 'desc' },
+                include: { user: { select: { name: true, email: true } } },
+                skip,
+                take: query.limit,
+            }),
+            prisma.financialRecord.count({ where }),
+        ]);
+
+        return {
+            records,
+            pagination: {
+                total,
+                page: query.page,
+                limit: query.limit,
+                totalPages: Math.ceil(total / query.limit),
+            },
+        };
     },
 
     async getRecordById(id: string, userId: string, role: string) {
-        const record = await prisma.financialRecord.findUnique({
-            where: { id },
+        const record = await prisma.financialRecord.findFirst({
+            where: { id, deletedAt: null },
             include: { user: { select: { name: true, email: true } } },
         });
 
@@ -98,7 +122,10 @@ export const recordService = {
             throw { status: 403, message: 'Forbidden' };
         }
 
-        await prisma.financialRecord.delete({ where: { id } });
+        await prisma.financialRecord.update({
+            where: { id },
+            data: { deletedAt: new Date() },
+        });
         return { success: true };
     },
 };
