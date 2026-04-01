@@ -106,21 +106,18 @@ This project is pre-configured for a "One-Click" deployment to **Render** using 
 1.  **Push to GitHub**: Ensure your latest changes are pushed.
 2.  **Go to Render**: [dashboard.render.com](https://dashboard.render.com)
 3.  **New -> Blueprint**: Select your repository.
-4.  **Wait**: Render will automatically set up:
-    -   A **Postgres Database** (`zorvyn-db`)
+4.  **Set Environment Variables**: In the Render Blueprint screen, paste your **Neon DATABASE_URL** when prompted.
+5.  **Wait**: Render will automatically set up:
     -   A **Node Web Service** (`zorvyn-finance-api`)
-    -   Automatic environment variables (`DATABASE_URL`, `JWT_SECRET`, etc.)
-5.  **Live!**: Your API will be live at `https://your-service-name.onrender.com/api-docs`
+6.  **Live!**: Your API will be live at `https://your-service-name.onrender.com/api-docs`
 
 ---
 
-## 🛠️ Local Setup (Postgres)
-Since we have upgraded to **Postgres** for production:
-1.  **DB Setup**: Ensure you have a Postgres instance running locally or use a cloud DB like [Neon](https://neon.tech).
-2.  **Env**: Update `DATABASE_URL` in your `.env` file.
-3.  **Install**: `npm install`
-4.  **Migrate**: `npx prisma migrate dev`
-5.  **Run**: `npm run dev`
+## 🛠️ Local Setup (Neon Postgres)
+Since we have upgraded to **Neon Postgres**:
+1.  **Env**: Update `DATABASE_URL` in your `.env` file with your Neon connection string.
+2.  **Install**: `npm install && npx prisma generate`
+3.  **Run**: `npm run dev`
 
 ---
 
