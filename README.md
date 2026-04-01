@@ -100,6 +100,28 @@ Since most endpoints are protected, follow these steps to test them locally:
     - Paste your token into the **Token** field.
 4.  **Send**: You are now authorized! The API will return data based on your user role.
 
+## 🚀 Instant Deployment (Render Blueprint)
+This project is pre-configured for a "One-Click" deployment to **Render** using a **Postgres** database.
+
+1.  **Push to GitHub**: Ensure your latest changes are pushed.
+2.  **Go to Render**: [dashboard.render.com](https://dashboard.render.com)
+3.  **New -> Blueprint**: Select your repository.
+4.  **Wait**: Render will automatically set up:
+    -   A **Postgres Database** (`zorvyn-db`)
+    -   A **Node Web Service** (`zorvyn-finance-api`)
+    -   Automatic environment variables (`DATABASE_URL`, `JWT_SECRET`, etc.)
+5.  **Live!**: Your API will be live at `https://your-service-name.onrender.com/api-docs`
+
+---
+
+## 🛠️ Local Setup (Postgres)
+Since we have upgraded to **Postgres** for production:
+1.  **DB Setup**: Ensure you have a Postgres instance running locally or use a cloud DB like [Neon](https://neon.tech).
+2.  **Env**: Update `DATABASE_URL` in your `.env` file.
+3.  **Install**: `npm install`
+4.  **Migrate**: `npx prisma migrate dev`
+5.  **Run**: `npm run dev`
+
 ---
 
 ## Access Matrix

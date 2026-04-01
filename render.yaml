@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: zorvyn-finance-api
+    runtime: node
+    plan: free # Free tier Node service
+    buildCommand: npm install && npm run build
+    startCommand: npm run db:migrate && npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zorvyn-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 4000
+
+databases:
+  - name: zorvyn-db
+    plan: free # Render's free Postgres (starts with 3 months free)
+    region: oregon # Set your preferred region
