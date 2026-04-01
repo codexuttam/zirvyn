@@ -7,7 +7,17 @@ const router = Router();
 
 router.use(authMiddleware);
 
-// All roles can view dashboard data
+/**
+ * @swagger
+ * /dashboard/summary:
+ *   get:
+ *     summary: Get dashboard totals and trends
+ *     tags: [Dashboard]
+ *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200:
+ *         description: Dashboard summary data
+ */
 router.get('/summary', roleMiddleware('VIEWER', 'ANALYST', 'ADMIN'), dashboardController.getSummary);
 
 export default router;
