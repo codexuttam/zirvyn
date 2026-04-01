@@ -10,14 +10,19 @@ export const updateUserSchema = z.object({
 export const userService = {
     async getAllUsers() {
         return prisma.user.findMany({
-            where: { deletedAt: null },
+            where: {
+                deletedAt: null,
+            },
             select: { id: true, email: true, name: true, role: true, status: true, createdAt: true },
         });
     },
 
     async getUserById(id: string) {
         const user = await prisma.user.findFirst({
-            where: { id, deletedAt: null },
+            where: {
+                id,
+                deletedAt: null,
+            },
             select: { id: true, email: true, name: true, role: true, status: true, createdAt: true },
         });
 
@@ -38,7 +43,10 @@ export const userService = {
     async deleteUser(id: string) {
         await prisma.user.update({
             where: { id },
-            data: { deletedAt: new Date(), status: 'INACTIVE' },
+            data: {
+                deletedAt: new Date(),
+                status: 'INACTIVE'
+            },
         });
         return { success: true };
     },
